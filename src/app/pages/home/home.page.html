@@ -1,0 +1,29 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div id="container">
+
+    <ion-item class="ion-text-center">
+      <ion-label>Usuario:</ion-label>
+      <ion-input type="username" 
+                 placeholder="usuario"
+                 name="username"
+                 [(ngModel)]="username"
+                 required></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-text-center">
+      <ion-label>Contraseña:</ion-label>
+      <ion-input type="password" 
+                 placeholder="contraseña"
+                 name="password"
+                 [(ngModel)]="password"
+                 required></ion-input>
+    </ion-item>
+
+    <br>
+    <ion-button (click)="verificarUsuario()"
+                     color="primary"
+                     shape="round">
+         Login
+    </ion-button>
+  </div>
+</ion-content>

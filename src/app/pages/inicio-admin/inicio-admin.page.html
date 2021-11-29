@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bienvenido, admin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div id="container">
+    <ion-button (click)="crearCuenta()"
+                color="primary"
+                shape="round">
+    Crear usuario
+    </ion-button>
+  
+    <ion-button (click)="bloquearCuenta()"
+                color="primary"
+                shape="round">
+    Bloquear cuenta
+    </ion-button>
+
+    <ion-button (click)="acreditarCuenta()"
+                color="primary"
+                shape="round">
+    Acreditar a cuenta
+    </ion-button>
+  </div>
+  
+
+</ion-content>
