@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="primary"
+                  routerLink="/inicio-admin">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="header">
+        <h1>Crear una nueva cuenta</h1>
+  </div>
+
+  <form id="#form">
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Nombre completo"
+                  name="nombre"
+                  [(ngModel)]="nombre"></ion-input>
+    </ion-item>
+    
+    <ion-item class="ion-margin-bottom">
+      <ion-datetime displayFormat="DD MM YYYY" 
+                    placeholder="Fecha de nacimiento" 
+                    name="nacimiento"
+                    min="1920" max="2003"
+                    [(ngModel)]="nacimiento"></ion-datetime>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Dirección"
+                  name="direccion"
+                  [(ngModel)]="direccion"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Teléfono"
+                  name="telefono"
+                  [(ngModel)]="telefono"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Usuario"
+                  name="usuario"
+                  [(ngModel)]="usuario"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Password"
+                  type="password"
+                  name="password"
+                  [(ngModel)]="password"></ion-input>
+    </ion-item>
+
+    <ion-button (click)="crearCuenta()" expand="block" shape="round">
+      Crear
+    </ion-button>
+  </form>
+
+</ion-content>

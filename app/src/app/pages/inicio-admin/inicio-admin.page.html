@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary"
+                  routerLink="/home">
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="header">
+    <h1>Bienvenido, admin</h1>
+  </div>
+
+  <div id="container">
+
+    <ion-button (click)="crearCuenta()"
+                color="primary"
+                shape="round">
+    Crear cuenta
+    </ion-button>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Numero de cuenta"
+                  name="cuenta"
+                  [(ngModel)]="numeroCuenta"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Q. 0.00"
+                  name="cantidad"
+                  [(ngModel)]="cantidadAcreditar"></ion-input>
+    </ion-item>
+
+    <ion-button (click)="agregarServicio()"
+                color="primary"
+                shape="round">
+    Agregar cuenta de ahorro
+    </ion-button>
+  
+    <ion-button (click)="bloquearCuenta()"
+                color="primary"
+                shape="round">
+    Bloquear cuenta
+    </ion-button>
+
+    <ion-button (click)="acreditarCuenta()"
+                color="primary"
+                shape="round">
+    Acreditar a cuenta
+    </ion-button>
+  </div>
+  
+
+</ion-content>
