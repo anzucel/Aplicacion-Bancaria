@@ -1,14 +1,14 @@
 const config = {
-    user:'calebmg',
-    password:'admin123',
-    server:'127.0.0.1',
+    user:'sa',
+    password:'remoto',
+    server:'DESKTOP-LEDRMIJ',
     database:'Banco',
     options:{
         trustedconnection:false,
         enableArithAbort:true,
         encrypt:false
     },
-    port: 1433
+   // port: 1433
 }
 
 module.exports = config;

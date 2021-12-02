@@ -40,12 +40,19 @@ router.route('/users/:uName').get((request, response) => {
 })
 
 //Insert user
-router.route('/users/insert').post((request, response) => {
+/* router.route('/users/insert').post((request, response) => {
     let usuario = {...request.body}
     dbUser.insertUser(usuario).then(result => {
         response.json(result[0]);
     })
-})
+}) */
+
+app.post('/users/insert', function(req, res){
+    var user = req.body;
+    dbUser.insertUser(user).then(result =>{
+        res.json(result[0]);
+    })
+});
 
 //Delete users by userName
 router.route('/users/delete').post((request, response) => {
