@@ -12,7 +12,7 @@ async function getUsers() {
     }
 }
 
-async function getUser(userName) {
+async function getUser(userName) { 
     try {
         let pool = await sql.connect(config);
         let user = await pool.request()

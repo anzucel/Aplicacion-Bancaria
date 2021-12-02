@@ -33,19 +33,18 @@ router.route('/users').get((request, response) => {
 })
 
 //Get users by userName
-router.route('/users/:uName').get((request, response) => {
+/* router.route('/users/:uName').get((request, response) => {
     dbUser.getUser(request.params.uName).then(result => {
         response.json(result[0]);
     })
-})
-
-//Insert user
-/* router.route('/users/insert').post((request, response) => {
-    let usuario = {...request.body}
-    dbUser.insertUser(usuario).then(result => {
-        response.json(result[0]);
-    })
 }) */
+
+
+app.get('/users/:uName', function(req, res){
+    dbUser.getUser(req.params.uName).then(result => {
+        res.json(result[0]); 
+    })
+})
 
 app.post('/users/insert', function(req, res){
     var user = req.body;

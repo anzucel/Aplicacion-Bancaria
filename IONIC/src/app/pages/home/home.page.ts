@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { User } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-home',
@@ -12,29 +14,34 @@ export class HomePage {
   username: string = "";
   password: string = "";
   isUser: boolean = true;
+  info: any;
+  correct: boolean = false;
 
   constructor(private route: Router,
-              private toastCtrl: ToastController) {}
+              private toastCtrl: ToastController,
+              private http: HttpClient) {}
 
   verificarUsuario(){
-    console.log(this.username, this.password);
-    //verificar en la base de datos y redirigir a la pagina correspondiente
-
-    if(this.username == "admin" && this.password == "123"){
-      this.username = "";
-      this.password = "";
-      this.route.navigate(['/inicio-admin']);
-    } 
-    else if(this.isUser){
-      this.username = "";
-      this.password = "";
-      this.route.navigate(['/inicio-usuario']);
-    }
-    else{
-      this.username = "";
-      this.password = "";
-      this.presentToast("Usuario o contraseña incorrectos, inténtelo de nuevo");
-    }
+    var usuario = this.username;
+    var contraseña = this.password;
+    this.getUser().then(
+      (res: User) =>{
+        this.info = res;
+        console.log(usuario);
+        if(usuario == "admin" && contraseña == "123"){
+          this.username = "";
+          this.password = "";
+          this.isUser = false;
+          this.route.navigate(['/inicio-admin']);
+        }
+        else if(this.info[0].Usuario === usuario && this.info[0].Contraseña === contraseña){  
+          this.route.navigate(['/inicio-usuario']);
+        }
+        else{
+          this.presentToast("Usuario o contraseña incorrectos, inténtelo de nuevo");
+        }
+      }
+    );
   }
 
   async presentToast(message: string){
@@ -45,4 +52,7 @@ export class HomePage {
     toast.present();
   }
 
+  getUser(){
+    return this.http.get(`http://localhost:8090/users/${this.username}`).toPromise();
+  };
 }
