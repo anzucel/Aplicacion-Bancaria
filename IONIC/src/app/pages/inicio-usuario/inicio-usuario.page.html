@@ -1,0 +1,46 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary"
+                  routerLink="/home">
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="header">
+    <h1>Bienvenido, </h1>
+  </div>
+
+  <div id="container">
+
+    <ion-button (click)="entreCuentas()"
+                color="primary"
+                shape="round">
+    Transferencia a cuenta propia
+    </ion-button>
+
+    <ion-button (click)="aTerceros()"
+                color="primary"
+                shape="round"
+                routerLink="/transferencia-terceros">
+    Transferencia a terceros
+    </ion-button>
+
+    <ion-button (click)="transacciones()"
+                color="primary"
+                shape="round">
+    Historial de transacciones
+    </ion-button>
+
+    <ion-button (click)="changePassword()"
+                color="primary"
+                shape="round">
+    Cambiar contraseña
+    </ion-button>
+  </div>
+  
+
+</ion-content>
