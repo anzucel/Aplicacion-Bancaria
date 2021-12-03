@@ -7,26 +7,35 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './crear-usuario.page.html',
   styleUrls: ['./crear-usuario.page.scss'],
 })
+
 export class CrearUsuarioPage {
 
-  nombre: string = "";
+  primerNombre: string = "";
+  segundoNombre: string = "";
+  apellidos: string = "";
   nacimiento: string = "";
   direccion: string = "";
   telefono: string = "";
   usuario: string = "";
   password: string = "";
+  nombreCompleto: string = "";
 
   constructor( private toastCtrl: ToastController,
                 private http: HttpClient) { }
 
   crearCuenta() {
-    console.log(this.nombre, this.nacimiento, this.direccion, this.telefono, this.usuario, this.password);
+
+    if(this.segundoNombre != ""){
+      this.nombreCompleto = this.primerNombre + " " + this.segundoNombre;
+    }else{
+      this.nombreCompleto = this.primerNombre;
+    }
 
     //insertar a la base de datos 
     let user ={
       user: this.usuario,
-      name: this.nombre,
-      lastName: this.nombre,
+      name: this.nombreCompleto,
+      lastName: this.apellidos,
       birthday: this.nacimiento,
       address: this.direccion,
       phoneNumber: this.telefono,
@@ -38,7 +47,19 @@ export class CrearUsuarioPage {
       console.log('post response', response);
     });
 
-    this.presentToast("Cuenta creada correctamente");   
+    this.presentToast("Cuenta creada correctamente");  
+
+    //vaciar variables 
+    this.primerNombre = "";
+    this.segundoNombre = "";
+    this.apellidos = "";
+    this.nacimiento = "";
+    this.direccion = "";
+    this.telefono = "";
+    this.usuario = "";
+    this.password = "";
+    this.nombreCompleto = "";
+    
   }
 
   async presentToast(message: string){

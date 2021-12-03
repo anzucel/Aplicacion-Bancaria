@@ -16,9 +16,21 @@
 
   <form id="#form">
     <ion-item class="ion-margin-bottom">
-      <ion-input  placeholder="Nombre completo"
+      <ion-input  placeholder="Primer nombre"
                   name="nombre"
-                  [(ngModel)]="nombre"></ion-input>
+                  [(ngModel)]="primerNombre"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Segundo nombre (opcional)"
+                  name="nombre"
+                  [(ngModel)]="segundoNombre"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Apellidos"
+                  name="nombre"
+                  [(ngModel)]="apellidos"></ion-input>
     </ion-item>
     
     <ion-item class="ion-margin-bottom">

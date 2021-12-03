@@ -1,0 +1,55 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="primary"
+                  routerLink="/inicio-usuario">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="header">
+    <h1>Transferencia entre cuentas</h1>
+  </div>
+
+  <form id="#form">
+
+    <ion-item class="ion-margin-bottom">
+      <ion-label>Origen</ion-label>
+      <ion-select interface="popover"
+                  name="destino"
+                  [(ngModel)]="cuentaOrigen">
+        <ion-select-option>Monetaria</ion-select-option>
+        <ion-select-option>Ahorro 1</ion-select-option>
+        <ion-select-option>Ahorro 2</ion-select-option>
+        <ion-select-option>Ahorro 3</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-label>Destino</ion-label>
+      <ion-select interface="popover"
+                  name="destino"
+                  [(ngModel)]="cuentaDestino">
+        <ion-select-option>Monetaria</ion-select-option>
+        <ion-select-option>Ahorro 1</ion-select-option>
+        <ion-select-option>Ahorro 2</ion-select-option>
+        <ion-select-option>Ahorro 3</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-label>Q. </ion-label>
+      <ion-input  placeholder="0.00"
+                  name="cantidad"
+                  [(ngModel)]="cantidad"></ion-input>
+    </ion-item>
+
+    <ion-button (click)="transferir($event)" expand="block" shape="round">
+      Transferir
+    </ion-button>
+  </form>
+  
+</ion-content>

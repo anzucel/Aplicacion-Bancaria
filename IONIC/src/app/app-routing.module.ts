@@ -26,7 +26,11 @@ const routes: Routes = [
   {
     path: 'transferencia-terceros',
     loadChildren: () => import('./pages/transferencia-terceros/transferencia-terceros.module').then( m => m.TransferenciaTercerosPageModule)
+  },  {
+    path: 'transferencia-propia',
+    loadChildren: () => import('./pages/transferencia-propia/transferencia-propia.module').then( m => m.TransferenciaPropiaPageModule)
   },
+
 ];
 
 @NgModule({

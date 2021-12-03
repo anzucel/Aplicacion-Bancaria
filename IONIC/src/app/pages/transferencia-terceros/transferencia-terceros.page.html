@@ -14,7 +14,42 @@
     <h1>Transferencia a terceros</h1>
   </div>
 
-  <div id="container">
+  <form id="#form">
 
-  </div>
+    <ion-item class="ion-margin-bottom">
+      <ion-label>Origen</ion-label>
+      <ion-select interface="popover"
+                  name="destino"
+                  [(ngModel)]="cuentaOrigen">
+        <ion-select-option>Monetaria</ion-select-option>
+        <ion-select-option>Ahorro 1</ion-select-option>
+        <ion-select-option>Ahorro 2</ion-select-option>
+        <ion-select-option>Ahorro 3</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-label>Destino</ion-label>
+      <ion-select interface="popover"
+                  name="destino"
+                  [(ngModel)]="cuentaDestino">
+        <ion-select-option>Zucely</ion-select-option>
+        <ion-select-option>Boris</ion-select-option>
+        <ion-select-option>Marcela</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-label>Q. </ion-label>
+      <ion-input  placeholder="0.00"
+                  name="cantidad"
+                  [(ngModel)]="cantidad"></ion-input>
+    </ion-item>
+
+    <ion-button (click)="transferir($event)" expand="block" shape="round">
+      Transferir
+    </ion-button>
+  </form>
+  
 </ion-content>
+
