@@ -9,6 +9,7 @@ const dbTransaction = require('./dbtransaccion');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+const dbcuenta = require('./dbcuenta');
 
 var app = express();
 var router = express.Router();
@@ -33,25 +34,27 @@ router.route('/users').get((request, response) => {
 })
 
 //Get users by userName
-/* router.route('/users/:uName').get((request, response) => {
-    dbUser.getUser(request.params.uName).then(result => {
-        response.json(result[0]);
-    })
-}) */
-
-
 app.get('/users/:uName', function(req, res){
     dbUser.getUser(req.params.uName).then(result => {
         res.json(result[0]); 
     })
 })
 
+// Post 
 app.post('/users/insert', function(req, res){
     var user = req.body;
     dbUser.insertUser(user).then(result =>{
         res.json(result[0]);
     })
 });
+
+app.post('/account/accredit', function(req, res){
+    var info = req.body;
+    dbcuenta.creditAccount(info).then(result => {
+        res.json(result[0]);
+    })
+})
+
 
 //Delete users by userName
 router.route('/users/delete').post((request, response) => {

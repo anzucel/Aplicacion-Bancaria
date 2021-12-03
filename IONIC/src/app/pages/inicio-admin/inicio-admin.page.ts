@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-inicio-admin',
@@ -13,7 +14,8 @@ export class InicioAdminPage {
   cantidadAcreditar: string = "";
   
   constructor(private route: Router,
-              private toastCtrl: ToastController) { }
+              private toastCtrl: ToastController,
+              private http: HttpClient) { }
 
   crearCuenta(){
     console.log("crear usuario");
@@ -39,8 +41,19 @@ export class InicioAdminPage {
     if(this.cantidadAcreditar == ""){
       this.presentToast("Ingrese una cantidad para acreditar a la cuenta");
     }else{
-      this.numeroCuenta = "";
+      /* this.numeroCuenta = "";
       this.cantidadAcreditar = "";
+       */
+      let info = {
+        accountNumber: this.numeroCuenta,
+        amount: this.cantidadAcreditar
+      }
+
+      this.http.post('http://localhost:8090/account/accredit', info)
+      .subscribe(response =>{
+        console.log('post response', response);
+      });
+
     }
 
     console.log("acreditar a una cuenta");

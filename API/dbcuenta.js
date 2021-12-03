@@ -12,6 +12,20 @@ async function getAccount() {
     }
 }
 
+async function creditAccount(info) {
+    try {
+        let pool = await sql.connect(config);
+        let infoToInsert = await pool.request()
+            .input('NumeroCuenta', sql.NVarChar, info.accountNumber)
+            .input('Monto', sql.NVarChar, info.amount)
+            .execute("SPCreditAccount");
+        return infoToInsert.recordsets;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
-    getAccount : getAccount
+    getAccount : getAccount,
+    creditAccount : creditAccount
 }

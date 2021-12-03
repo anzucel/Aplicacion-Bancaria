@@ -10,4 +10,11 @@ class Cuentahabiente {
     }
 }
 
+class AcreditarModel{
+    constructor(accountNumber, amount){
+        this.accountNumber = accountNumber;
+        this.amount = amount;
+    }
+}
 module.exports = Cuentahabiente
+module.exports = AcreditarModel
