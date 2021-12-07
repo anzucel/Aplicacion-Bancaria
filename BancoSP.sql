@@ -1,15 +1,18 @@
 select * from Administrador
 
-select * from Cuenta --información total de la cuenta
+select * from Cuenta -- listado de cuentas por usuarios
 
-select * from Cuentahabiente
+select * from Cuentahabiente -- listado de usuarios
 
-select * from Registro
+select * from Registro -- registro de administrador
 
 select * from Tercero -- cuentas que tiene cada cuentahabiente
 
-select * from Transaccion
+select * from Transaccion -- historial de transacciones
 
+-- Administrador
+insert into Cuentahabiente values ('admin', 'admin', 'admin', GETDATE(), 'Ciudad', 00000000, '123')
+insert into Cuenta values (000001, 'admin', 'admin', 10000000000, 1)
 
 create or alter procedure SPInsertUser
 @usuario nvarchar(50),
@@ -21,57 +24,84 @@ create or alter procedure SPInsertUser
 @contraseña nvarchar(50)
 as
 begin 
-	declare @numCuenta nvarchar(6), @cont int, @contReg int
-	set @numCuenta = '123'
-	set @cont = (select COUNT(*) from Cuenta)
-	set @contReg = (select COUNT(*) from Registro) + 1;
+	declare @existe nvarchar(50)
+	set @existe = (select Usuario from Cuentahabiente where Usuario = @usuario)
 
-	insert into Cuentahabiente values (@usuario, @nombres, @apellidos, CAST(@FechaNacimiento as date), @direccion, @telefono, @contraseña)
-	if(@cont < 10)
+	if(@existe is null)
 	begin
-		set @numcuenta += '00' + CAST(@cont + 1 as nvarchar(1))
-	end
-	if(@cont < 100 and @cont > 10)
-	begin
-		set @numcuenta += '0' + CAST(@cont + 1 as nvarchar(1))
-	end
-	if(@cont < 1000 and @cont > 100)
-	begin
-		set @numcuenta += CAST(@cont + 1 as nvarchar(1))
-	end
+		declare @numCuenta nvarchar(6), @cont int, @contReg int
+		set @numCuenta = '123' -- codigo cuentas monetarias
+		set @cont = (select COUNT(*) from Cuenta where Tipo = 'Monetaria')
+		set @contReg = (select COUNT(*) from Registro) + 1;
 
-	insert into Cuenta values (@numCuenta, @usuario, 'Monetaria', 1000.00, 1)
-	insert into Registro values (@contReg, 'admin', @usuario, 'Crear', 1000.00, GETDATE()) 
+		insert into Cuentahabiente values (@usuario, @nombres, @apellidos, CAST(@FechaNacimiento as date), @direccion, @telefono, @contraseña)
+		if(@cont < 10)
+		begin
+			set @numcuenta += '00' + CAST(@cont + 1 as nvarchar(1))
+		end
+		if(@cont < 100 and @cont >= 10)
+		begin
+			set @numcuenta += '0' + CAST(@cont + 2 as nvarchar(2))
+		end
+		if(@cont < 1000 and @cont >= 100)
+		begin
+			set @numcuenta += CAST(@cont + 1 as nvarchar(3))
+		end
+
+		insert into Cuenta values (@numCuenta, @usuario, 'Monetaria', 0.00, 1)
+		insert into Registro values (@contReg, 'admin', @usuario, 'Crear C.M', 1000.00, GETDATE()) 
+		insert into Tercero values (@usuario, 'admin', 'Monetaria', @numCuenta)
+		insert into Transaccion values (1, @numCuenta, '1000.00', 'C', GETDATE())
+		
+		select 'Mensaje' = 'Cuenta creada correctamente'
+		return
+	end
+	else
+	begin
+		select 'Mensaje' = 'Error, el usuario ingresado ya existe'
+		return
+	end
 end;
-
 
 create or alter procedure SPCreditAccount
 @NumeroCuenta nvarchar(15),
-@monto nvarchar(20)
+@monto nvarchar(50)
 as
 begin
-	declare @usuario nvarchar(20), @contRegistro int, @contTran int , @saldo money 
+	declare @usuario nvarchar(20), @contRegistro int, @contTran int , @saldo money, @estado bit
 	set @usuario = (select Cuentahabiente from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
 	set @contRegistro = (select COUNT(*) from Registro) + 1;
 	set @contTran = (select COUNT(*) from Transaccion) + 1;
 	set @saldo = TRY_CONVERT(money, @monto) + (select Saldo from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
+	set @estado = (select Estado from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
 
-	-- inserta en el historial del admin
-	insert into Registro values	(@contRegistro, 'admin', @usuario, 'Crédito',TRY_CONVERT(money, @monto), GETDATE())
-	-- inserta la transacción
-	--insert into Transaccion values ('admin', @usuario, TRY_CONVERT(money, @monto), 'C', GETDATE())
-	-- actualiza datos de la cuenta
-	update Cuenta set Saldo = @saldo where [No. Cuenta] = CAST(@NumeroCuenta as int)
+	if(@usuario is not null and @estado = 1)
+	begin
+		-- inserta en el historial del admin
+		insert into Registro values	(@contRegistro, 'admin', @usuario, 'Crédito',TRY_CONVERT(money, @monto), GETDATE())
+		-- inserta la transacción
+		insert into Transaccion values (1, CAST(@NumeroCuenta as int), @monto, 'C', GETDATE())
+		-- actualiza datos de la cuenta
+		update Cuenta set Saldo = @saldo where [No. Cuenta] = CAST(@NumeroCuenta as int)
+		select 'Mensaje' = 'Transacción realizada de manera exitosa'
+		return 
+	end
+	else
+	begin
+		select 'Mensaje' = 'Número de cuenta inválido'
+		return 
+	end
 end;
 
 
-exec SPCreditAccount '123003', '123.00'
+exec SPCreditAccount '123003', '1.00'
 
-exec SPInsertUser 'Ana', 'Ana Karina', 'Ortiz Fuentes', '2000-02-23', 'Ciudad', '38238992', 'ana123'
+--insert into Transaccion values (1, 123003, '1.00', 'C', GETDATE())
 
-delete from Cuentahabiente where Usuario = 'AndreaH'
+exec SPInsertUser 'luisa', 'Luisa', 'López Fuentes', '1992-02-23', 'Ciudad', '13847562', 'luisa123'
+
+delete from Cuentahabiente where Usuario = 'jose'
 ---------------
-
 
 --Validar que lo tenga en contactos y en el receptor este HABILITADO
 CREATE OR ALTER FUNCTION F_ValidarTercero(@emisor NVARCHAR(50), @receptor NVARCHAR(50), @cuentaR INT)
@@ -100,7 +130,7 @@ BEGIN
 END
 GO
 
-SELECT dbo.F_ValidarTercero('boris', 'lucas', 123457) AS CuentaATransferir
+SELECT dbo.F_ValidarTercero('admin', 'Ana', 123003) AS CuentaATransferir
 go
 -----------------
 
@@ -195,7 +225,7 @@ AS
 
 	IF (@ValMonto = 0)
 	BEGIN
-		PRINT('Saldo insuficiente')
+		print 'Saldo insuficiente'
 		RETURN
 	END
 
@@ -205,5 +235,77 @@ AS
 	END
 
 	INSERT INTO Transaccion VALUES (@cuentaE, @cuentaR, @monto, 'C', @fechahora)
+	select 'Mensaje' = 'Transacción realizada de manera exitosa'
 	--PRINT(@emisor + @cuentaE + @receptor + @cuentaR + @monto + 'C' + @fechahora)
 GO
+
+
+-- Crear cuenta de ahorro
+create or alter procedure SPCreateAccount
+@NumeroCuenta nvarchar(6)
+as 
+begin
+	-- buscar el usuario de la cuenta por numero de cuenta
+	declare @usuario nvarchar(50), @cuentaAhorro nvarchar(6), @cont int, @contReg int, @tipo nvarchar(30), @estado bit
+	set @usuario = (select Cuentahabiente from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
+	set @cuentaAhorro = '456' 
+	set @cont = (select COUNT(*) from Cuenta where Tipo = 'Ahorro')
+	set @contReg = (select COUNT(*) from Registro) + 1;
+	set @tipo = (select Tipo from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
+	set @estado = (select Estado from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
+
+	if(@tipo = 'Monetaria' and @usuario is not null and @estado = 1)
+	begin
+		if(@cont < 10)
+		begin
+			set @cuentaAhorro += '00' + CAST(@cont + 1 as nvarchar(1))
+		end
+		if(@cont < 100 and @cont >= 10)
+		begin
+			set @cuentaAhorro += '0' + CAST(@cont + 1 as nvarchar(3))
+		end
+		if(@cont < 1000 and @cont >= 100)
+		begin
+			set @cuentaAhorro += CAST(@cont + 1 as nvarchar(3))
+		end 
+	
+		-- agregar nueva cuenta en tabla CUENTA 
+		insert into Cuenta values (@cuentaAhorro, @usuario, 'Ahorro', 0.00, 1)
+		-- agreagar en tabla REGISTRO crear cuenta de ahorro
+		insert into Registro values (@contReg, 'admin', @usuario, 'Crear C.A', 0.00, GETDATE())
+		-- agregar en tercero
+		--insert into Tercero values (@usuario, 'admin', 'Ahorro', @cuentaAhorro)
+		select 'Mensaje' = 'Cuenta de ahorro agregada'
+		return
+	end 
+	else
+	begin
+		select 'Mensaje' = 'Numero de cuenta inválido'
+		return
+	end
+end;
+
+exec SPCreateAccount '234543'
+
+-- Bloquear cuenta
+create or alter procedure SPBlockAccount
+@NumeroCuenta nvarchar(6)
+as
+begin
+	-- buscar el numero de cuenta
+	declare @usuario nvarchar(50), @estado bit 
+	set @usuario = (select Cuentahabiente from Cuenta where [No. Cuenta] = CAST(@numeroCuenta as int))
+	set @estado = (select Estado from Cuenta where  [No. Cuenta] = CAST(@numeroCuenta as int))
+
+	if(@estado = 1 and @usuario is not null)
+	begin
+		update Cuenta set Estado = 0 where [No. Cuenta] = @NumeroCuenta
+		select 'Mensaje' = 'Cuenta ' + @NumeroCuenta + ' bloqueada exitosamente'
+		return
+	end 
+	else
+	begin
+		select 'Mensaje' = 'Número de cuenta inválido'
+		return
+	end
+end

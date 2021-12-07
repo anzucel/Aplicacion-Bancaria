@@ -40,14 +40,17 @@ app.get('/users/:uName', function(req, res){
     })
 })
 
-// Post 
-app.post('/users/insert', function(req, res){
+// ======= Post ======= 
+
+// crear una nueva cuenta
+app.post('/users/insert', function(req, res){ 
     var user = req.body;
     dbUser.insertUser(user).then(result =>{
         res.json(result[0]);
     })
 });
 
+// acreditar a cuenta
 app.post('/account/accredit', function(req, res){
     var info = req.body;
     dbcuenta.creditAccount(info).then(result => {
@@ -55,6 +58,21 @@ app.post('/account/accredit', function(req, res){
     })
 })
 
+// agregar cuenta de ahorro
+app.post('/account/create', function(req, res){
+    var info = req.body;
+    dbcuenta.createAccount(info).then(result => {
+        res.json(result[0]);
+    }) 
+}) 
+
+// bloquear cuenta
+app.post('/account/block', function(req, res){
+    var info = req.body;
+    dbcuenta.blockAccount(info).then(result => {
+        res.json(result[0]);
+    }) 
+}) 
 
 //Delete users by userName
 router.route('/users/delete').post((request, response) => {

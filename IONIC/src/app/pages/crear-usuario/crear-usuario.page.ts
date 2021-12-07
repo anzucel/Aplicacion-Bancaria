@@ -45,13 +45,14 @@ export class CrearUsuarioPage {
     this.http.post('http://localhost:8090/users/insert', user)
     .subscribe(response =>{
       console.log('post response', response);
+      this.presentToast(response[0].Mensaje);
     });
 
-    this.presentToast("Cuenta creada correctamente");  
+    //this.presentToast("Cuenta creada correctamente");  
 
     //vaciar variables 
     this.primerNombre = "";
-    this.segundoNombre = "";
+    this.segundoNombre = ""; 
     this.apellidos = "";
     this.nacimiento = "";
     this.direccion = "";
