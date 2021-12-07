@@ -1,0 +1,69 @@
+<ion-content [fullscreen]="true" class="ion-padding" scroll-y="false">
+  <ion-slides>
+    <ion-slide>
+      <div class="slide">
+        <img src="..\..\assets\first.jpg"/>
+        <h2>Bienvenido</h2>
+        <p>El <b>Banco del desarrollo</b> te ofrece todas las herramientas necesarias para manejar tu dinero de manera segura.</p>
+      </div>
+    </ion-slide>
+  
+    <ion-slide>
+      <img src="..\..\assets\second.jpg"/>
+      <h2>Manejo de cuenta</h2>
+      <p>Monitorea todos los movimientos de tus cuentas desde tu app, lleva control de tu presupuesto.</p>
+    </ion-slide>
+
+    <ion-slide>
+      <img src="..\..\assets\third.jpg"/>
+      <h2>Transferencias</h2>
+      <p>Realiza transferencias entre tus cuentas o a terceros de manera segura.</p>
+    </ion-slide>
+
+    <ion-slide>
+      <img src="..\..\assets\fourth.jpg"/>
+      <h2>¿Empezamos?</h2>
+      <ion-button fill="clear"
+                  (click)="home()">Login 
+        <ion-icon slot="end" name="arrow-forward">
+        </ion-icon>
+      </ion-button>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+
+<style>
+  ion-slides {
+    height: 100%;
+  }
+
+  .swiper-slide {
+    display: block;
+  }
+
+  .swiper-slide h2 {
+    margin-top: 2.8rem;
+  }
+
+  .swiper-slide img {
+    max-height: 50%;
+    max-width: 80%;
+    margin: 60px 0 40px;
+    pointer-events: none;
+  }
+
+  b {
+    font-weight: 500;
+  }
+
+  p {
+    padding: 0 40px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ion-color-step-600, #60646b);
+  }
+
+  p b {
+    color: var(--ion-text-color, #000000);
+  }
+</style>

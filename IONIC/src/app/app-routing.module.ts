@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'index',
     pathMatch: 'full'
   },
   {
@@ -26,9 +26,14 @@ const routes: Routes = [
   {
     path: 'transferencia-terceros',
     loadChildren: () => import('./pages/transferencia-terceros/transferencia-terceros.module').then( m => m.TransferenciaTercerosPageModule)
-  },  {
+  },
+  {
     path: 'transferencia-propia',
     loadChildren: () => import('./pages/transferencia-propia/transferencia-propia.module').then( m => m.TransferenciaPropiaPageModule)
+  },
+  {
+    path: 'index',
+    loadChildren: () => import('./pages/index/index.module').then( m => m.IndexPageModule)
   },
 
 ];
