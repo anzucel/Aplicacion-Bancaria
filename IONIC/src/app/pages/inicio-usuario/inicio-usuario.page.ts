@@ -11,7 +11,6 @@ export class InicioUsuarioPage implements OnInit {
 
   cuentasUsuario: any[] = [];
   nuevaPassword: string = "";
-  passwordAntigua: string = "";
 
   constructor(private route: Router,
               private toastCtrl: ToastController) { }
@@ -22,14 +21,18 @@ export class InicioUsuarioPage implements OnInit {
 
   entreCuentas(){
     this.route.navigate(['/transferencia-propia']);
+    //hacer transferencia a cuenta propia
     console.log("entre cuentas");
   }
 
   aTerceros(){
+    this.route.navigate(['/transferencia-terceros']);
+    //hacer la transferencia a la cuenta tercera 
     console.log("a terceros");
   }
 
   transacciones(){
+    this.route.navigate(['/historial']);
     console.log("transacciones");
   }
 
@@ -37,7 +40,6 @@ export class InicioUsuarioPage implements OnInit {
     console.log("change password");
     // comprobar si si es la contrase;a actual y actualizarla
     this.presentToast("Se ha actualizado la contraseña");
-    this.passwordAntigua = "";
     this.nuevaPassword = "";
 
   }

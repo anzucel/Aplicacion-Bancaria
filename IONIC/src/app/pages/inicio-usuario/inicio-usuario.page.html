@@ -10,11 +10,12 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div id="header">
-    <h1>Bienvenido, </h1>
-  </div>
-
   <div id="container">
+
+    <div id="header">
+      <h1>Bienvenido, </h1>
+    </div>
+
     <ion-card>
       <ion-card-header>
         <ion-card-subtitle>Cuenta principal</ion-card-subtitle>
@@ -45,16 +46,24 @@
 
     <ion-button (click)="aTerceros()"
                 color="primary"
-                shape="round"
-                routerLink="/transferencia-terceros">
+                shape="round">
     Transferencia a terceros
     </ion-button>
 
-    <ion-button (click)="transacciones()"
+    <ion-button class="ion-margin-bottom"
+                (click)="transacciones()"
                 color="primary"
                 shape="round">
     Historial de transacciones
     </ion-button>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input type="text" 
+                 placeholder="Nueva contraseña"
+                 name="password"
+                 [(ngModel)]="nuevaPassword"
+                 required></ion-input>
+    </ion-item>
 
     <ion-button (click)="changePassword()"
                 color="primary"

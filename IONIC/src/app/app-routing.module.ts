@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'index',
     loadChildren: () => import('./pages/index/index.module').then( m => m.IndexPageModule)
+  },  {
+    path: 'historial',
+    loadChildren: () => import('./pages/historial/historial.module').then( m => m.HistorialPageModule)
   },
+
 
 ];
 

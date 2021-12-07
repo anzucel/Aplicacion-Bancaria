@@ -15,6 +15,7 @@ export class TransferenciaTercerosPage implements OnInit {
   constructor(private toastCtrl: ToastController) { }
 
   ngOnInit() {
+    //recuperar todas las cuentas de origen y destino disponibles 
   }
 
   transferir(cuenta){
