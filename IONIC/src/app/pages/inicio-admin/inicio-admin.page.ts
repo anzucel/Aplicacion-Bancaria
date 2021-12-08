@@ -51,7 +51,7 @@ export class InicioAdminPage {
     //bloquear cuenta con el numero de cuenta
     console.log("bloquear cuenta");
     if(this.numeroCuenta != ""){
-      let info = {
+      let info = { 
         accountNumber: this.numeroCuenta,
       }
   

@@ -7,3 +7,11 @@ export interface User {
     Telefono: string,
     Contraseña: string
 }
+
+export interface Cuenta {
+    NoCuenta: number,
+    Cuentahabiente: string,
+    Tipo: string,
+    Saldo: number,
+    Estado: boolean
+}

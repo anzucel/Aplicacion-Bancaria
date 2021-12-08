@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { DataLocalServiceService } from '../../services/data-local-service.service';
+import { HttpClient } from '@angular/common/http';
+import { Cuenta } from 'src/app/interfaces/interfaces';
 
 @Component({
   selector: 'app-inicio-usuario',
@@ -11,12 +14,27 @@ export class InicioUsuarioPage implements OnInit {
 
   cuentasUsuario: any[] = [];
   nuevaPassword: string = "";
+  usuario: any;
 
   constructor(private route: Router,
-              private toastCtrl: ToastController) { }
+              private toastCtrl: ToastController,
+              private DataService :DataLocalServiceService,
+              private http: HttpClient) { }
 
   ngOnInit() {
     //recuperar todas las cuentas del usuario para mostrarlas en la pagina principal 
+    this.DataService.cargarUsuario().then(
+      (resp: string) =>{
+        this.usuario = resp;
+        console.log('Resp' + this.usuario);
+        this.getAccounts().then(
+          (res: any) => {
+            this.cuentasUsuario.push(...res);
+            //console.log(this.cuentasUsuario);
+          }
+        );
+      }
+    );
   }
 
   entreCuentas(){
@@ -27,7 +45,7 @@ export class InicioUsuarioPage implements OnInit {
 
   aTerceros(){
     this.route.navigate(['/transferencia-terceros']);
-    //hacer la transferencia a la cuenta tercera 
+    //hacer la transferencia a la cuenta tercera  
     console.log("a terceros");
   }
 
@@ -50,5 +68,9 @@ export class InicioUsuarioPage implements OnInit {
       duration: 1500
     });
     toast.present();
+  }
+
+  getAccounts(){
+    return this.http.get(`http://localhost:8090/account/get/${this.usuario}`).toPromise();
   }
 }

@@ -19,8 +19,8 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/api', router);
 
-//Rutas para GET
-
+//==== GET ====
+ 
 router.route('/admins').get((request, response) => {
     dbAdmin.getAdmin().then(result => {
         response.json(result[0]);
@@ -40,6 +40,17 @@ app.get('/users/:uName', function(req, res){
     })
 })
 
+app.get('/account/get/:uName', function(req, res){
+    dbAccount.getAccounts(req.params.uName).then(result => {
+        res.json(result[0]); 
+    })
+})
+
+app.get('/account/getnumber/:uName', function(req, res){
+    dbAccount.getNumberAccounts(req.params.uName).then(result => {
+        res.json(result[0]); 
+    })
+})
 // ======= Post ======= 
 
 // crear una nueva cuenta

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../interfaces/interfaces';
+import { DataLocalServiceService } from '../../services/data-local-service.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,8 @@ export class HomePage {
 
   constructor(private route: Router,
               private toastCtrl: ToastController,
-              private http: HttpClient) {}
+              private http: HttpClient,
+              private DataService :DataLocalServiceService) {}
 
   verificarUsuario(){
     var usuario = this.username;
@@ -35,6 +37,7 @@ export class HomePage {
           this.route.navigate(['/inicio-admin']);
         }
         else if(this.info[0].Usuario === usuario && this.info[0].Contraseña === contraseña){  
+          this.DataService.guardarUsuario(usuario);
           this.route.navigate(['/inicio-usuario']);
         }
         else{
@@ -50,7 +53,7 @@ export class HomePage {
       duration: 1500
     });
     toast.present();
-  }
+  } 
 
   getUser(){
     return this.http.get(`http://localhost:8090/users/${this.username}`).toPromise();

@@ -49,9 +49,37 @@ async function blockAccount(info) {
     } 
 }
 
+async function getAccounts(userName) { 
+    try {
+        let pool = await sql.connect(config);
+        let user = await pool.request()
+            .input('input_user', sql.NVarChar, userName)
+            .query("SELECT * FROM Cuenta WHERE Cuentahabiente = @input_user and Estado = 1");
+
+        return user.recordsets;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getNumberAccounts(userName) { 
+    try {
+        let pool = await sql.connect(config);
+        let user = await pool.request()
+            .input('input_user', sql.NVarChar, userName)
+            .query("SELECT [No. Cuenta] as Cuenta FROM Cuenta WHERE Cuentahabiente = @input_user and Estado = 1");
+
+        return user.recordsets;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     getAccount : getAccount,
     creditAccount : creditAccount,
     createAccount: createAccount,
-    blockAccount: blockAccount
+    blockAccount: blockAccount,
+    getAccounts: getAccounts,
+    getNumberAccounts: getNumberAccounts
 }

@@ -29,10 +29,11 @@ begin
 
 	if(@existe is null)
 	begin
-		declare @numCuenta nvarchar(6), @cont int, @contReg int
+		declare @numCuenta nvarchar(6), @cont int, @contReg int, @contTercero int
 		set @numCuenta = '123' -- codigo cuentas monetarias
 		set @cont = (select COUNT(*) from Cuenta where Tipo = 'Monetaria')
 		set @contReg = (select COUNT(*) from Registro) + 1;
+		set @contTercero = (select COUNT(*) from Tercero) + 1;
 
 		insert into Cuentahabiente values (@usuario, @nombres, @apellidos, CAST(@FechaNacimiento as date), @direccion, @telefono, @contraseña)
 		if(@cont < 10)
@@ -50,7 +51,7 @@ begin
 
 		insert into Cuenta values (@numCuenta, @usuario, 'Monetaria', 0.00, 1)
 		insert into Registro values (@contReg, 'admin', @usuario, 'Crear C.M', 1000.00, GETDATE()) 
-		insert into Tercero values (@usuario, 'admin', 'Monetaria', @numCuenta)
+		insert into Tercero values (@contTercero, 'admin', @usuario, 'Monetaria', @numCuenta)
 		insert into Transaccion values (1, @numCuenta, '1000.00', 'C', GETDATE())
 		
 		select 'Mensaje' = 'Cuenta creada correctamente'
@@ -114,7 +115,7 @@ BEGIN
 	SET @tercero = (SELECT Tercero.[No. Cuenta] FROM Tercero 
 	INNER JOIN Cuenta 
 		ON Tercero.Cuentahabiente = Cuenta.Cuentahabiente
-	WHERE Tercero.Usuario = @receptor AND Tercero.Cuentahabiente = @emisor AND Tercero.[No. Cuenta] = @cuentaR)
+	WHERE Tercero.Usuario = @emisor AND Tercero.Cuentahabiente = @receptor AND Tercero.[No. Cuenta] = @cuentaR AND Cuenta.[No. Cuenta] = @cuentaR)
 
 	SET @estado = (SELECT Cuenta.Estado FROM Tercero 
 	INNER JOIN Cuenta 
@@ -129,8 +130,7 @@ BEGIN
 	RETURN ISNULL(@tercero,'NotExist')
 END
 GO
-
-SELECT dbo.F_ValidarTercero('admin', 'Ana', 123003) AS CuentaATransferir
+SELECT dbo.F_ValidarTercero('admin', 'sofiaK', 456015) AS CuentaATransferir
 go
 -----------------
 
@@ -205,21 +205,22 @@ AS
 	DECLARE @ValTercero	NVARCHAR(50);
 	DECLARE @ValMonto	BIT;
 
-	SELECT @cuentaE = CuentaEmisor FROM inserted
-	SELECT @emisor = Cuentahabiente FROM Cuenta WHERE [No. Cuenta] = @cuentaE
-	SELECT @cuentaR = CuentaReceptor FROM inserted
-	SELECT @receptor = Cuentahabiente FROM Cuenta WHERE [No. Cuenta] = @cuentaR
+	SELECT @cuentaE = CuentaEmisor FROM inserted -- 1
+	SELECT @emisor = Cuentahabiente FROM Cuenta WHERE [No. Cuenta] = @cuentaE -- admin
+	SELECT @cuentaR = CuentaReceptor FROM inserted -- numCuenta
+	SELECT @receptor = Cuentahabiente FROM Cuenta WHERE [No. Cuenta] = @cuentaR -- sofiaK
 	
 	SELECT @monto = Monto FROM inserted
 	SELECT @fechahora = [Fecha y hora] FROM inserted
-
-	SET @ValTercero = (SELECT dbo.F_ValidarTercero(@emisor, @receptor, @cuentaR))
+	--insert into Transaccion values (1, @numCuenta, '1000.00', 'C', GETDATE())
+	
+	SET @ValTercero = (SELECT dbo.F_ValidarTercero(@emisor, @receptor, @cuentaR)) -- admin, sofiaK, 123014
 
 	IF (@ValTercero <> @cuentaR)
 	BEGIN
 		PRINT(@ValTercero)
 		RETURN
-	END
+	END 
 
 	SET @ValMonto = (SELECT dbo.F_ValidarMonto(@emisor, @cuentaE, @monto))
 
@@ -246,13 +247,14 @@ create or alter procedure SPCreateAccount
 as 
 begin
 	-- buscar el usuario de la cuenta por numero de cuenta
-	declare @usuario nvarchar(50), @cuentaAhorro nvarchar(6), @cont int, @contReg int, @tipo nvarchar(30), @estado bit
+	declare @usuario nvarchar(50), @cuentaAhorro nvarchar(6), @cont int, @contReg int, @tipo nvarchar(30), @estado bit, @contTercero int 
 	set @usuario = (select Cuentahabiente from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
 	set @cuentaAhorro = '456' 
 	set @cont = (select COUNT(*) from Cuenta where Tipo = 'Ahorro')
 	set @contReg = (select COUNT(*) from Registro) + 1;
 	set @tipo = (select Tipo from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
 	set @estado = (select Estado from Cuenta where [No. Cuenta] = CAST(@NumeroCuenta as int))
+	set @contTercero = (select COUNT(*) from Tercero) + 1;
 
 	if(@tipo = 'Monetaria' and @usuario is not null and @estado = 1)
 	begin
@@ -274,7 +276,9 @@ begin
 		-- agreagar en tabla REGISTRO crear cuenta de ahorro
 		insert into Registro values (@contReg, 'admin', @usuario, 'Crear C.A', 0.00, GETDATE())
 		-- agregar en tercero
-		--insert into Tercero values (@usuario, 'admin', 'Ahorro', @cuentaAhorro)
+		insert into Tercero values (@contTercero, 'admin', @usuario, 'Ahorro', @cuentaAhorro)
+		-- agregar a terceros la cuenta monetaria con la cuenta de ahorro
+		--insert into Tercero values (@contTercero + 1, @usuario, @usuario, 'Monetaria', @NumeroCuenta)  
 		select 'Mensaje' = 'Cuenta de ahorro agregada'
 		return
 	end 
@@ -284,7 +288,7 @@ begin
 		return
 	end
 end;
-
+select * from Tercero
 exec SPCreateAccount '234543'
 
 -- Bloquear cuenta
@@ -309,3 +313,27 @@ begin
 		return
 	end
 end
+
+-- transferir a cuenta
+create or alter procedure SPTransferir
+@origen nvarchar(6),
+@destino nvarchar(6),
+@monto nvarchar(6)
+as
+begin
+	if(@origen <> @destino)
+	begin
+		-- insert en transacción
+		insert into Transaccion values (@origen, @destino, @monto, 'C', GETDATE())
+		select 'Mensaje' = 'Transacción exitosa'
+	end
+	else
+	begin
+		select 'Mensaje' = 'Error en transacción, número de cuenta inválido'
+	end
+end
+
+exec SPTransferir '123012', '123013', '100.00'
+
+
+

@@ -21,10 +21,10 @@
       <ion-select interface="popover"
                   name="destino"
                   [(ngModel)]="cuentaOrigen">
-        <ion-select-option>Monetaria</ion-select-option>
-        <ion-select-option>Ahorro 1</ion-select-option>
+        <ion-select-option *ngFor = "let cuenta of cuentasUsuario">{{cuenta.Cuenta}}</ion-select-option>
+<!--    <ion-select-option>Ahorro 1</ion-select-option>
         <ion-select-option>Ahorro 2</ion-select-option>
-        <ion-select-option>Ahorro 3</ion-select-option>
+        <ion-select-option>Ahorro 3</ion-select-option> -->
       </ion-select>
     </ion-item>
 
@@ -33,10 +33,11 @@
       <ion-select interface="popover"
                   name="destino"
                   [(ngModel)]="cuentaDestino">
-        <ion-select-option>Monetaria</ion-select-option>
+      <ion-select-option *ngFor = "let cuenta of cuentasUsuario">{{cuenta.Cuenta}}</ion-select-option>
+        <!-- <ion-select-option>Monetaria</ion-select-option>
         <ion-select-option>Ahorro 1</ion-select-option>
         <ion-select-option>Ahorro 2</ion-select-option>
-        <ion-select-option>Ahorro 3</ion-select-option>
+        <ion-select-option>Ahorro 3</ion-select-option> -->
       </ion-select>
     </ion-item>
 
