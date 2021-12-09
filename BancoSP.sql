@@ -294,7 +294,6 @@ begin
 		return
 	end
 end;
-select * from Tercero
 exec SPCreateAccount '234543'
 
 -- Bloquear cuenta
@@ -342,22 +341,79 @@ end
 
 exec SPTransferir '456004', '456007', '3.00' 
 
-SELECT dbo.F_ValidarTercero('andreaG', 'andreaG', 456004) AS CuentaATransferir
+-- cambiar la contraseña
+create or alter procedure SPCambiarContraseña
+@nuevaC nvarchar(50),
+@usuario nvarchar(50)
+as 
+begin 
+	declare @antiguaC nvarchar(50)
+	set @antiguaC = (select Contraseña from Cuentahabiente where Usuario = @usuario)
 
-select * from Tercero	
+	if(@antiguaC <> @nuevaC)
+	begin
+		update Cuentahabiente set Contraseña = @nuevaC where Usuario = @usuario
+		select 'Mensaje' = 'Contraseña actualizada'
+	end
+	else 
+	begin
+		select 'Mensaje' = 'Error, ingrese una nueva contraseña'
+	end 
+end 
 
-select * from Transaccion
+-- Agregar tercero
+create or alter procedure SPAgregarT
+@usuario nvarchar(50),
+@usuarioT nvarchar(50),
+@cuenta nvarchar(6)
+as
+begin
+	declare @estado bit, @contador int, @tipo nvarchar(30)
+	set @estado = (select Estado from Cuenta where Cuentahabiente = @usuarioT and [No. Cuenta] = @cuenta)
+	set @contador = (select COUNT(*) from Tercero) + 1;
 
-select * from Cuenta
+	if(@estado = 1)
+	begin
+		set @tipo = (select Tipo from Cuenta where Cuentahabiente = @usuarioT and [No. Cuenta] = @cuenta)
+		insert into Tercero values (@contador, @usuario, @usuarioT, @tipo, @cuenta)
+		select 'Mensaje' = 'Cuenta ' + @cuenta + ' agregada existosamente'
+	end
+	else 
+	begin
+		select 'Mensaje' = 'Error, Usuario o número de cuenta incorrectos'
+	end
+end
 
+-- Eliminar tercero
+create or alter procedure SPEliminarT
+@usuario nvarchar(50),
+@usuarioT nvarchar(50),
+@cuenta nvarchar(6)
+as
+begin
+	begin try
+	declare @estado bit, @contador int, @tipo nvarchar(30), @existe nvarchar(50)
+	set @estado = (select Estado from Cuenta where Cuentahabiente = @usuarioT and [No. Cuenta] = @cuenta)
+	set @contador = (select COUNT(*) from Tercero) + 1;
+	set @existe = (select Usuario from Tercero where Cuentahabiente = @usuarioT and [No. Cuenta] = @cuenta and Usuario = @usuario)
 
-SELECT Tercero.[No. Cuenta] FROM Tercero 
-	INNER JOIN Cuenta 
-		ON Tercero.Cuentahabiente = Cuenta.Cuentahabiente
-	WHERE Tercero.Usuario = 'andreaG' AND Tercero.Cuentahabiente = 'andreaG' AND Tercero.[No. Cuenta] = 456004 AND Cuenta.[No. Cuenta] = 456004
-
-
-	SELECT Estado FROM Tercero 
-	INNER JOIN Cuenta 
-		ON Tercero.Usuario = Cuenta.Cuentahabiente
-	WHERE Cuenta.Cuentahabiente = 'andreaG' AND Cuenta.[No. Cuenta] = 456004 and Tercero.[No. Cuenta] = 456004
+	if(@estado = 1 and @existe is not null)
+	begin
+		set @tipo = (select Tipo from Cuenta where Cuentahabiente = @usuarioT and [No. Cuenta] = @cuenta)
+		delete from Tercero where Usuario = @usuario and Cuentahabiente = @usuarioT and [No. Cuenta] = @cuenta
+		select 'Mensaje' = 'La cuenta ' + @cuenta + ' ha sido eliminada'
+	end
+	else 
+	begin
+		if(@existe is null and @estado = 1)
+		begin
+			select 'Mensaje' = 'Error, Cuenta no agregada'
+			return
+		end 
+		select 'Mensaje' = 'Error, Usuario o número de cuenta incorrectos'
+	end
+	end try 
+	begin catch
+		select 'Mensaje' = 'Error, datos inválidos'
+	end catch
+end

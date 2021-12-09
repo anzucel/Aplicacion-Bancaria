@@ -1,3 +1,5 @@
+const { Numeric } = require("mssql");
+
 class Cuentahabiente {
     constructor(user, name, lastName, birthday, address, phoneNumber, password) {
         this.user = user;
@@ -24,6 +26,16 @@ class Transfer{
         this.monto = monto;
     }
 }
+
+class TAccount{
+    constructor(user, Tuser, numberAccount){
+        this.user = user;
+        TouchList.Tuser = Tuser;
+        this.numberAccount = numberAccount;
+    }
+}
+
 module.exports = Cuentahabiente
 module.exports = AcreditarModel
 module.exports = Transfer
+module.exports = TAccount

@@ -10,6 +10,7 @@ export class DataLocalServiceService {
 
   constructor(private storage: Storage) {
     this.initDB(); 
+    this.cargarUsuario();
   }
 
   private _storage: Storage | null = null;

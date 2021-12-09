@@ -63,6 +63,18 @@ async function Transfer(info) {
     } 
 }
 
+async function getInfoAccounts(userName) { 
+    try {
+        let pool = await sql.connect(config);
+        let user = await pool.request()
+            .input('input_user', sql.NVarChar, userName)
+            .query("select [No. Cuenta] as NoCuenta, Cuentahabiente, Tipo, Saldo, Estado from cuenta where Cuentahabiente = @input_user and Estado = 1");
+        return user.recordsets;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 async function getAccounts(userName) { 
     try {
         let pool = await sql.connect(config);
@@ -99,13 +111,58 @@ async function getHistorial(userName) {
         console.log(error);
     }
 }
+
+async function changePassword(info) { 
+    try {
+        let pool = await sql.connect(config);
+        let infoToInsert = await pool.request()
+            .input('nuevaC', sql.NVarChar, info.password)
+            .input('usuario', sql.NVarChar, info.user)
+            .execute("SPCambiarContraseña");
+        return infoToInsert.recordsets;
+    } catch (error) {
+        console.log(error);
+    } 
+}
+
+async function addTAccount(info) { 
+    try {
+        let pool = await sql.connect(config);
+        let infoToInsert = await pool.request()
+            .input('usuario', sql.NVarChar, info.user)
+            .input('usuarioT', sql.NVarChar, info.Tuser)
+            .input('cuenta', sql.NVarChar, info.numberAccount)
+            .execute("SPAgregarT");
+        return infoToInsert.recordsets;
+    } catch (error) {
+        console.log(error);
+    } 
+}
+
+async function deleteTAccount(info) { 
+    try {
+        let pool = await sql.connect(config);
+        let infoToInsert = await pool.request()
+            .input('usuario', sql.NVarChar, info.user)
+            .input('usuarioT', sql.NVarChar, info.Tuser)
+            .input('cuenta', sql.NVarChar, info.numberAccount)
+            .execute("SPEliminarT");
+        return infoToInsert.recordsets;
+    } catch (error) {
+        console.log(error);
+    } 
+}
 module.exports = {
     getAccount : getAccount,
+    getInfoAccounts: getInfoAccounts,
     creditAccount : creditAccount,
     createAccount: createAccount,
     blockAccount: blockAccount,
     getAccounts: getAccounts,
     getNumberAccounts: getNumberAccounts,
     Transfer: Transfer,
-    getHistorial: getHistorial
+    getHistorial: getHistorial,
+    changePassword: changePassword,
+    addTAccount: addTAccount,
+    deleteTAccount: deleteTAccount
 }

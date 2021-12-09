@@ -34,7 +34,7 @@ export class InicioUsuarioPage implements OnInit {
         this.getAccounts().then(
           (res: any) => {
             this.cuentasUsuario.push(...res);
-            //console.log(this.cuentasUsuario);
+            console.log(this.cuentasUsuario);
           }
         );
       }
@@ -54,13 +54,11 @@ export class InicioUsuarioPage implements OnInit {
   }
 
   async manejarTerceros(){
-    var user = this.DataService.cargarUsuario();
-
     const modal = await this.modalCtrl.create(
       {
         component: CuentaTerceraComponent,
         componentProps:{
-          user
+          username: this.usuario 
         }
       });
       modal.present();
@@ -74,9 +72,23 @@ export class InicioUsuarioPage implements OnInit {
   changePassword(){
     console.log("change password");
     // comprobar si si es la contrase;a actual y actualizarla
-    this.presentToast("Se ha actualizado la contraseña");
-    this.nuevaPassword = "";
+    if(this.nuevaPassword != ""){
+      let info = {
+        password: this.nuevaPassword,
+        user: this.usuario
+      }
 
+      this.http.post(`http://localhost:8090/account/changePassword`, info)
+        .subscribe(response =>{
+          console.log('post response', response);
+          this.presentToast(response[0].Mensaje);
+        }
+      ); 
+    }
+    else{
+      this.presentToast("Ingrese una contraseña");
+    }
+    this.nuevaPassword = "";
   }
 
   async presentToast(message: string){

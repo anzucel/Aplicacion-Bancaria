@@ -16,16 +16,16 @@
 
   <ion-card *ngFor="let tran of transacciones">
     <ion-card-header>
-      <ion-card-title *ngIf="{{tran.Tipo}} == D">Debito: Q. {{tran.Monto}}</ion-card-title>
-      <ion-card-title *ngIf="{{tran.Tipo}} == C">Credito: Q. {{tran.Monto}}</ion-card-title>
+      <ion-card-title>Debito: Q. {{tran.Monto}}</ion-card-title>
+      <ion-card-title>Credito: Q. {{tran.Monto}}</ion-card-title>
     </ion-card-header>
   
     <ion-card-content>
-      Emisor: {{tran.Emisor}}
+      Emisor: {{tran.CuentaEmisor}}
       <br>
-      Receptor: {{tran.Receptor}}
+      Receptor: {{tran.CuentaReceptor}}
       <br>
-      Fecha y hora: {{tran.[Fecha y hora]}}
+      Fecha y hora: {{tran.Fecha}} 
     </ion-card-content>
   </ion-card>
 

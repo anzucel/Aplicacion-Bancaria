@@ -42,7 +42,7 @@ app.get('/users/:uName', function(req, res){
 
 // Get info account by username
 app.get('/account/get/:uName', function(req, res){
-    dbAccount.getAccounts(req.params.uName).then(result => {
+    dbAccount.getInfoAccounts(req.params.uName).then(result => {
         res.json(result[0]); 
     })
 })
@@ -110,6 +110,29 @@ app.post('/account/transfer', function(req, res){
     }) 
 }) 
 
+// cambio de contraseña
+app.post('/account/changePassword', function(req, res){
+    var info = req.body;
+    dbcuenta.changePassword(info).then(result => {
+        res.json(result[0]);
+    }) 
+}) 
+
+// agregar tercero
+app.post('/account/addTAccount', function(req, res){
+    var info = req.body;
+    dbcuenta.addTAccount(info).then(result => {
+        res.json(result[0]);
+    }) 
+}) 
+
+// eliminar tercero
+app.post('/account/deleteTAccount', function(req, res){
+    var info = req.body;
+    dbcuenta.deleteTAccount(info).then(result => {
+        res.json(result[0]);
+    }) 
+}) 
 
 //Delete users by userName
 router.route('/users/delete').post((request, response) => {

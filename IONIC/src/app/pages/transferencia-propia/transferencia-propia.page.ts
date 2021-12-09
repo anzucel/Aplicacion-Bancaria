@@ -40,7 +40,7 @@ export class TransferenciaPropiaPage implements OnInit {
   transferir(cuenta){
     console.log();
     //hacer validaciones (trigger) para transferir la cantidad de una cuenta a otra
-    if(this.cuentaOrigen != "" && this.cuentaDestino != ""){
+    if(this.cuentaOrigen != "" && this.cuentaDestino != "" && this.cantidad != ""){
      
       let info = {
         origen: this.cuentaOrigen,
@@ -52,12 +52,16 @@ export class TransferenciaPropiaPage implements OnInit {
         .subscribe(response =>{
           console.log('post response', response);
           this.presentToast(response[0].Mensaje);
-          //this.presentToast("Se han transferido Q. " + this.cantidad + " de la cuenta " + this.cuentaOrigen + " a la cuenta " + this.cuentaDestino);
         }
       );  
     }
     else{
-      this.presentToast("Ingrese cuenta Destino y Origen");
+      if(this.cuentaDestino == "" || this.cuentaOrigen == ""){  
+        this.presentToast("Ingrese cuenta Destino y Origen");
+      }
+      if(this.cantidad == ""){
+        this.presentToast("Ingrese monto");
+      }
     }
 
     // resetear valores 
