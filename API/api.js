@@ -40,17 +40,34 @@ app.get('/users/:uName', function(req, res){
     })
 })
 
+// Get info account by username
 app.get('/account/get/:uName', function(req, res){
     dbAccount.getAccounts(req.params.uName).then(result => {
         res.json(result[0]); 
     })
 })
 
+// Get numero de cuenta transferencias propias
 app.get('/account/getnumber/:uName', function(req, res){
     dbAccount.getNumberAccounts(req.params.uName).then(result => {
         res.json(result[0]); 
     })
 })
+
+// Get numero de cuenta transferencia a terceros
+app.get('/account/getAccounts/:uName', function(req, res){
+    dbAccount.getAccounts(req.params.uName).then(result => {
+        res.json(result[0]); 
+    })
+})
+
+// Get historial de transacciones
+app.get('/account/gethistorial/:uName', function(req, res){
+    dbAccount.getHistorial(req.params.uName).then(result => {
+        res.json(result[0]); 
+    })
+})
+
 // ======= Post ======= 
 
 // crear una nueva cuenta
@@ -84,6 +101,15 @@ app.post('/account/block', function(req, res){
         res.json(result[0]);
     }) 
 }) 
+
+// transferencia a cuenta propia
+app.post('/account/transfer', function(req, res){
+    var info = req.body;
+    dbcuenta.Transfer(info).then(result => {
+        res.json(result[0]);
+    }) 
+}) 
+
 
 //Delete users by userName
 router.route('/users/delete').post((request, response) => {

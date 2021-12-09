@@ -16,5 +16,14 @@ class AcreditarModel{
         this.amount = amount;
     }
 }
+
+class Transfer{
+    constructor(origen, destino, monto){
+        this.origen = origen;
+        this.destino = destino;
+        this.monto = monto;
+    }
+}
 module.exports = Cuentahabiente
 module.exports = AcreditarModel
+module.exports = Transfer

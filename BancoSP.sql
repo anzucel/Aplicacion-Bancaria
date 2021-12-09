@@ -52,6 +52,7 @@ begin
 		insert into Cuenta values (@numCuenta, @usuario, 'Monetaria', 0.00, 1)
 		insert into Registro values (@contReg, 'admin', @usuario, 'Crear C.M', 1000.00, GETDATE()) 
 		insert into Tercero values (@contTercero, 'admin', @usuario, 'Monetaria', @numCuenta)
+		insert into Tercero values (@contTercero + 1, @usuario, @usuario, 'Monetaria', @numCuenta)
 		insert into Transaccion values (1, @numCuenta, '1000.00', 'C', GETDATE())
 		
 		select 'Mensaje' = 'Cuenta creada correctamente'
@@ -120,7 +121,7 @@ BEGIN
 	SET @estado = (SELECT Cuenta.Estado FROM Tercero 
 	INNER JOIN Cuenta 
 		ON Tercero.Usuario = Cuenta.Cuentahabiente
-	WHERE Cuenta.Cuentahabiente = @receptor AND Cuenta.[No. Cuenta] = @cuentaR )
+	WHERE Cuenta.Cuentahabiente = @receptor AND Cuenta.[No. Cuenta] = @cuentaR and Tercero.[No. Cuenta] = @cuentaR)
 	
 	IF @estado = 0
 	BEGIN
@@ -193,7 +194,7 @@ GO
 
 --Trigger de insert de transacción, insertar dos registros
 CREATE OR ALTER TRIGGER TRTransaccionRealizada
-ON Transaccion FOR INSERT
+ON Transaccion INSTEAD OF INSERT
 AS
 	DECLARE @emisor 	NVARCHAR(50);
 	DECLARE @cuentaE	INT;
@@ -227,16 +228,21 @@ AS
 	IF (@ValMonto = 0)
 	BEGIN
 		print 'Saldo insuficiente'
+		select 'Mensaje' = 'Saldo insuficiente'
 		RETURN
 	END
 
 	IF ((@ValTercero = @cuentaR) AND (@ValMonto = 1))
 	BEGIN
 		EXEC SPUpdateSaldos @cuentaE, @cuentaR, @monto
+		INSERT INTO Transaccion VALUES (@cuentaE, @cuentaR, @monto, 'D', @fechahora)
+		INSERT INTO Transaccion VALUES (@cuentaE, @cuentaR, @monto, 'C', @fechahora)
+	    select 'Mensaje' = 'Transacción realizada de manera exitosa'
+		RETURN
 	END
 
-	INSERT INTO Transaccion VALUES (@cuentaE, @cuentaR, @monto, 'C', @fechahora)
-	select 'Mensaje' = 'Transacción realizada de manera exitosa'
+	--INSERT INTO Transaccion VALUES (@cuentaE, @cuentaR, @monto, 'C', @fechahora)
+	--select 'Mensaje' = 'Transacción realizada de manera exitosa'
 	--PRINT(@emisor + @cuentaE + @receptor + @cuentaR + @monto + 'C' + @fechahora)
 GO
 
@@ -278,7 +284,7 @@ begin
 		-- agregar en tercero
 		insert into Tercero values (@contTercero, 'admin', @usuario, 'Ahorro', @cuentaAhorro)
 		-- agregar a terceros la cuenta monetaria con la cuenta de ahorro
-		--insert into Tercero values (@contTercero + 1, @usuario, @usuario, 'Monetaria', @NumeroCuenta)  
+		insert into Tercero values (@contTercero + 1, @usuario, @usuario, 'Ahorro', @cuentaAhorro)
 		select 'Mensaje' = 'Cuenta de ahorro agregada'
 		return
 	end 
@@ -324,16 +330,34 @@ begin
 	if(@origen <> @destino)
 	begin
 		-- insert en transacción
-		insert into Transaccion values (@origen, @destino, @monto, 'C', GETDATE())
-		select 'Mensaje' = 'Transacción exitosa'
+		insert into Transaccion values (@origen, @destino, @monto, 'D', GETDATE())
+		return
 	end
 	else
 	begin
 		select 'Mensaje' = 'Error en transacción, número de cuenta inválido'
+		return
 	end
 end
 
-exec SPTransferir '123012', '123013', '100.00'
+exec SPTransferir '456004', '456007', '3.00' 
+
+SELECT dbo.F_ValidarTercero('andreaG', 'andreaG', 456004) AS CuentaATransferir
+
+select * from Tercero	
+
+select * from Transaccion
+
+select * from Cuenta
 
 
+SELECT Tercero.[No. Cuenta] FROM Tercero 
+	INNER JOIN Cuenta 
+		ON Tercero.Cuentahabiente = Cuenta.Cuentahabiente
+	WHERE Tercero.Usuario = 'andreaG' AND Tercero.Cuentahabiente = 'andreaG' AND Tercero.[No. Cuenta] = 456004 AND Cuenta.[No. Cuenta] = 456004
 
+
+	SELECT Estado FROM Tercero 
+	INNER JOIN Cuenta 
+		ON Tercero.Usuario = Cuenta.Cuentahabiente
+	WHERE Cuenta.Cuentahabiente = 'andreaG' AND Cuenta.[No. Cuenta] = 456004 and Tercero.[No. Cuenta] = 456004
