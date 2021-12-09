@@ -1,0 +1,32 @@
+<ion-content class="ion-padding">
+  <div id="header">
+        <h1>Agregar o eliminar cuenta</h1>
+  </div>
+
+  <form id="#form">
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Usuario del tercero"
+                  name="username"
+                  [(ngModel)]="usernameTercero"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-margin-bottom">
+      <ion-input  placeholder="Cuenta del tercero"
+                  name="cuenta"
+                  [(ngModel)]="cuentaTercero"></ion-input>
+    </ion-item>
+
+    <ion-button (click)="agregarCuentaTercera()" expand="block" shape="round">
+      Agregar cuenta
+    </ion-button>
+
+    <ion-button (click)="borrarCuentaTercera()" expand="block" shape="round">
+      Eliminar cuenta
+    </ion-button>
+
+    <ion-button (click)="cerrar()" expand="block" shape="round">
+      Cerrar
+    </ion-button>
+  </form>
+
+</ion-content>

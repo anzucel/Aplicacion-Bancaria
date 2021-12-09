@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { DataLocalServiceService } from '../../services/data-local-service.service';
 import { HttpClient } from '@angular/common/http';
 import { Cuenta } from 'src/app/interfaces/interfaces';
+import { CuentaTerceraComponent } from '../../components/cuenta-tercera/cuenta-tercera.component';
 
 @Component({
   selector: 'app-inicio-usuario',
@@ -14,12 +15,15 @@ export class InicioUsuarioPage implements OnInit {
 
   cuentasUsuario: Cuenta[] = [];
   nuevaPassword: string = "";
+  usuarioTercero: string = "";
+  cuentaTercero: string = "";
   usuario: any;
 
   constructor(private route: Router,
               private toastCtrl: ToastController,
               private DataService :DataLocalServiceService,
-              private http: HttpClient) { }
+              private http: HttpClient,
+              private modalCtrl: ModalController) { }
 
   ngOnInit() {
     //recuperar todas las cuentas del usuario para mostrarlas en la pagina principal 
@@ -47,6 +51,19 @@ export class InicioUsuarioPage implements OnInit {
     this.route.navigate(['/transferencia-terceros']);
     //hacer la transferencia a la cuenta tercera  
     console.log("a terceros");
+  }
+
+  async manejarTerceros(){
+    var user = this.DataService.cargarUsuario();
+
+    const modal = await this.modalCtrl.create(
+      {
+        component: CuentaTerceraComponent,
+        componentProps:{
+          user
+        }
+      });
+      modal.present();
   }
 
   transacciones(){
