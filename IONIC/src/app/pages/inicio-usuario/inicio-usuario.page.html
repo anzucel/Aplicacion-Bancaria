@@ -16,25 +16,16 @@
       <h1>Bienvenido,</h1>
     </div>
 
-    <ion-card>
+    <ion-card *ngFor="let cuenta of cuentasUsuario">
       <ion-card-header>
-        <ion-card-subtitle>Cuenta principal</ion-card-subtitle>
-        <ion-card-title>Monetaria</ion-card-title>
+        <ion-card-subtitle>No. Cuenta: {{cuenta.NoCuenta}}</ion-card-subtitle>
+        <ion-card-title>{{cuenta.Tipo}}</ion-card-title>
       </ion-card-header>
     
       <ion-card-content>
-        Informacion de la cuenta
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle>Cuenta principal</ion-card-subtitle>
-        <ion-card-title>Monetaria</ion-card-title>
-      </ion-card-header>
-    
-      <ion-card-content>
-        Informacion de la cuenta
+        Saldo: {{cuenta.Saldo}}
+        <br>
+        Estado: {{cuenta.Estado}}
       </ion-card-content>
     </ion-card>
 

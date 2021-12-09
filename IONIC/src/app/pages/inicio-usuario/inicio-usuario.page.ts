@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { DataLocalServiceService } from '../../services/data-local-service.service';
@@ -12,7 +12,7 @@ import { Cuenta } from 'src/app/interfaces/interfaces';
 })
 export class InicioUsuarioPage implements OnInit {
 
-  cuentasUsuario: any[] = [];
+  cuentasUsuario: Cuenta[] = [];
   nuevaPassword: string = "";
   usuario: any;
 

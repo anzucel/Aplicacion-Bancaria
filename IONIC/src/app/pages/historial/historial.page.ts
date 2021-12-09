@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DataLocalServiceService } from '../../services/data-local-service.service';
 import { HttpClient } from '@angular/common/http';
 
