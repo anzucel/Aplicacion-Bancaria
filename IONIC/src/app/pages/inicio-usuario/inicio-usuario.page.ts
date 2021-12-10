@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { DataLocalServiceService } from '../../services/data-local-service.service';
 import { HttpClient } from '@angular/common/http';
 import { Cuenta } from 'src/app/interfaces/interfaces';
 import { CuentaTerceraComponent } from '../../components/cuenta-tercera/cuenta-tercera.component';
-
+import { NgZone } from '@angular/core';
+import { HistorialComponent } from '../../components/historial/historial.component';
 @Component({
   selector: 'app-inicio-usuario',
   templateUrl: './inicio-usuario.page.html',
@@ -23,14 +24,22 @@ export class InicioUsuarioPage implements OnInit {
               private toastCtrl: ToastController,
               private DataService :DataLocalServiceService,
               private http: HttpClient,
-              private modalCtrl: ModalController) { }
+              private modalCtrl: ModalController,
+              private navCtrl: NavController,
+              private zone: NgZone) { }
 
-  ngOnInit() {
-    //recuperar todas las cuentas del usuario para mostrarlas en la pagina principal 
+ ngOnInit() {
+ }
+
+  ionViewDidEnter(){
+    this.getData();
+  }
+
+  getData(){
     this.DataService.cargarUsuario().then(
       (resp: string) =>{
         this.usuario = resp;
-        console.log('Resp' + this.usuario);
+        console.log('Resp ' + this.usuario);  
         this.getAccounts().then(
           (res: any) => {
             this.cuentasUsuario.push(...res);
@@ -39,6 +48,12 @@ export class InicioUsuarioPage implements OnInit {
         );
       }
     );
+  }
+
+  refresh() {
+    this.zone.run(() => {
+      console.log('force update the screen');
+    });
   }
 
   entreCuentas(){
@@ -64,9 +79,17 @@ export class InicioUsuarioPage implements OnInit {
       modal.present();
   }
 
-  transacciones(){
-    this.route.navigate(['/historial']);
-    console.log("transacciones");
+  async verHistorial(Nocuenta){
+    console.log(Nocuenta);
+    const modal = await this.modalCtrl.create(
+      {
+        component: HistorialComponent,
+        componentProps:{
+          cuenta: Nocuenta,
+          username: this.usuario
+        }
+      });
+      modal.present();
   }
 
   changePassword(){
@@ -97,6 +120,10 @@ export class InicioUsuarioPage implements OnInit {
       duration: 1500
     });
     toast.present();
+  }
+
+  cerrarSesion(event){
+    this.cuentasUsuario = [];
   }
 
   getAccounts(){

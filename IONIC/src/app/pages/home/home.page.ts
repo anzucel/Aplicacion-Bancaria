@@ -29,7 +29,7 @@ export class HomePage {
     this.getUser().then(
       (res: User) =>{
         this.info = res;
-        console.log(usuario);
+        
         if(usuario == "admin" && contraseña == "123"){
           this.username = "";
           this.password = "";
@@ -38,6 +38,7 @@ export class HomePage {
         }
         else if(this.info[0].Usuario === usuario && this.info[0].Contraseña === contraseña){  
           this.DataService.guardarUsuario(usuario);
+
           this.route.navigate(['/inicio-usuario']);
         }
         else{
@@ -46,6 +47,7 @@ export class HomePage {
       }
     );
   }
+
 
   async presentToast(message: string){
     const toast = await this.toastCtrl.create({

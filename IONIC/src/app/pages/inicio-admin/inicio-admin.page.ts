@@ -92,6 +92,13 @@ export class InicioAdminPage {
     console.log("acreditar a una cuenta");
   }
 
+  cerrarSesion(event){
+    
+      console.log('Begin async operation');
+      event.target.complete();
+  
+  }
+
   async presentToast(message: string){
     const toast = await this.toastCtrl.create({
       message,

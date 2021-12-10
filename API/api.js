@@ -62,8 +62,8 @@ app.get('/account/getAccounts/:uName', function(req, res){
 })
 
 // Get historial de transacciones
-app.get('/account/gethistorial/:uName', function(req, res){
-    dbAccount.getHistorial(req.params.uName).then(result => {
+app.get('/account/gethistorial/:uName/:numcuenta', function(req, res){
+    dbAccount.getHistorial(req.params.uName, req.params.numcuenta).then(result => {
         res.json(result[0]); 
     })
 })
@@ -134,7 +134,7 @@ app.post('/account/deleteTAccount', function(req, res){
     }) 
 }) 
 
-//Delete users by userName
+//Delete users by userName  
 router.route('/users/delete').post((request, response) => {
     let usuario = {...request.body}
     dbUser.deleteUser(usuario).then(result => {

@@ -22,9 +22,11 @@ export class CuentaTerceraComponent implements OnInit {
   }
 
   agregarCuentaTercera(){
+    this.usernameTercero = (<HTMLInputElement>document.getElementById("usuario")).value;
+    this.cuentaTercero = (<HTMLInputElement>document.getElementById("cuenta")).value;
     console.log(this.username, this.usernameTercero, this.cuentaTercero)
     //agregar nueva cuenta tercera
-    /* let info = {
+    let info = { 
       user: this.username,
       Tuser: this.usernameTercero,
       numberAccount: this.cuentaTercero
@@ -35,7 +37,7 @@ export class CuentaTerceraComponent implements OnInit {
       console.log('post response', response);
       this.presentToast(response[0].Mensaje);
       }
-    );   */
+    );
   }
 
   borrarCuentaTercera(){

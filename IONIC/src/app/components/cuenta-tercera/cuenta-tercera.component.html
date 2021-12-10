@@ -6,14 +6,14 @@
   <form id="#form">
     <ion-item class="ion-margin-bottom">
       <ion-input  placeholder="Usuario del tercero"
-                  name="usernameTercero"
-                  [(ngModel)]="usernameTercero"></ion-input>
+                  name="usuario"
+                  id="usuario"></ion-input>
     </ion-item>
  
     <ion-item class="ion-margin-bottom">
       <ion-input  placeholder="Cuenta del tercero"
-                  name="cuentaTercero"
-                  [(ngModel)]="cuentaTercero"></ion-input>
+                  name="cuenta"
+                  id="cuenta"></ion-input>
     </ion-item>
 
     <ion-button (click)="agregarCuentaTercera()" expand="block" shape="round">
@@ -22,7 +22,7 @@
 
     <ion-button (click)="borrarCuentaTercera()" expand="block" shape="round">
       Eliminar cuenta
-    </ion-button>
+    </ion-button> 
 
     <ion-button (click)="cerrar()" expand="block" shape="round">
       Cerrar

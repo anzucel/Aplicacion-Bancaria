@@ -2,7 +2,8 @@
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button color="primary"
-                  routerLink="/home">
+                  routerLink="/home"
+                  (click)="cerrarSesion($event)">
         Cerrar sesión
       </ion-button>
     </ion-buttons>
@@ -13,10 +14,11 @@
   <div id="container">
 
     <div id="header">
-      <h1>Bienvenido,</h1>
+      <h1>Bienvenido, {{usuario}}</h1>
     </div>
 
-    <ion-card *ngFor="let cuenta of cuentasUsuario">
+    <ion-card *ngFor="let cuenta of cuentasUsuario" 
+              (click)="verHistorial(cuenta.NoCuenta)">
       <ion-card-header>
         <ion-card-subtitle>No. Cuenta: {{cuenta.NoCuenta}}</ion-card-subtitle>
         <ion-card-title>{{cuenta.Tipo}}</ion-card-title>
@@ -45,13 +47,6 @@
                 color="primary"
                 shape="round">
     Agregar/Eliminar cuenta tercera
-    </ion-button>
-
-    <ion-button class="ion-margin-bottom"
-                (click)="transacciones()"
-                color="primary"
-                shape="round">
-    Historial de transacciones
     </ion-button>
 
     <ion-item class="ion-margin-bottom">

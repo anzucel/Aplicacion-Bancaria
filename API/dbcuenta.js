@@ -100,12 +100,13 @@ async function getNumberAccounts(userName) {
     }
 }
 
-async function getHistorial(userName) { 
+async function getHistorial(userName, cuenta) { 
     try {
         let pool = await sql.connect(config);
         let user = await pool.request()
             .input('input_user', sql.NVarChar, userName)
-            .query("select CuentaEmisor, CuentaReceptor, Transaccion.Tipo, Transaccion.Monto, Transaccion.[Fecha y hora] as Fecha from Transaccion inner join Cuenta on Cuenta.[No. Cuenta] = CuentaEmisor or Cuenta.[No. Cuenta] = CuentaReceptor where Cuenta.Cuentahabiente = @input_user");
+            .input('input_cuenta', sql.NVarChar, cuenta)
+            .query("select CuentaEmisor, CuentaReceptor, Transaccion.Tipo, Transaccion.Monto, Transaccion.[Fecha y hora] as Fecha from Transaccion inner join Cuenta on Cuenta.[No. Cuenta] = CuentaEmisor or Cuenta.[No. Cuenta] = CuentaReceptor where ((Transaccion.Tipo = 'D' and CuentaEmisor = @input_cuenta) or (Transaccion.Tipo = 'C' and CuentaReceptor = @input_cuenta)) and Cuenta.Cuentahabiente = @input_user order by Fecha desc");
         return user.recordsets;
     } catch (error) {
         console.log(error);

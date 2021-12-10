@@ -21,7 +21,8 @@ export class DataLocalServiceService {
   }
 
   guardarUsuario(usuario: string){
-    this.storage.set('Usuario', usuario);
+    
+    this.storage.set('Usuario', usuario); 
   }
 
   async cargarUsuario(){
